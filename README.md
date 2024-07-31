@@ -16,7 +16,7 @@ Welcome to the NLP Sentiment Analysis Web App! This project harnesses the power 
 
 - **Backend**: Flask is used to create a lightweight yet powerful backend to handle requests and deliver results efficiently.
 - **Machine Learning**: TensorFlow powers the core sentiment analysis models, ensuring high accuracy and performance.
-- **Frontend**: HTML, CSS, and JavaScript form the foundation of the user interface, offering a responsive and engaging user experience.
+- **Frontend**: HTML & CSSform the foundation of the user interface, offering a responsive and engaging user experience.
 - (Future work)**Deployment**: Heroku provides a scalable cloud platform to host the web app, ensuring smooth and reliable access.
 
 ## Usage
