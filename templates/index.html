@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Sentiment Analysis</h1>
+        <form id="analysis-form" class="mt-4">
+            <div class="form-group">
+                <textarea class="form-control" name="text" rows="4" placeholder="Enter your text here..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Analyze</button>
+        </form>
+        <div id="result" class="mt-4 text-center"></div>
+        <canvas id="sentiment-chart" width="400" height="200" class="mt-4"></canvas>
+    </div>
+    <script>
+        document.getElementById('analysis-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const text = e.target.text.value;
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ text: text }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = `Sentiment: ${data.sentiment}`;
+                updateChart(data.sentiment);
+            });
+        });
+
+        const ctx = document.getElementById('sentiment-chart').getContext('2d');
+        const sentimentChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Positive', 'Negative'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [0, 0],
+                    backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+                    borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            }
+        });
+
+        function updateChart(sentiment) {
+            const data = sentimentChart.data.datasets[0].data;
+            if (sentiment === 'Positive') {
+                data[0] += 1;
+            } else {
+                data[1] += 1;
+            }
+            sentimentChart.update();
+        }
+    </script>
+</body>
+</html>
